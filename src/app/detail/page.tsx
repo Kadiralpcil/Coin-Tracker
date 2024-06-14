@@ -3,7 +3,7 @@ import getCoinList from "@/services/coinList";
 import { Coin } from "@/types/coin";
 import { Card, CardBody, CardHeader, User } from "@nextui-org/react";
 import { useSearchParams } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { Suspense, useCallback, useEffect, useState } from "react";
 import { FaCaretDown, FaCaretUp } from "react-icons/fa";
 import HistoricalChart from "./HistoricalChart";
 
@@ -58,58 +58,60 @@ const Detail = () => {
   };
 
   return (
-    <div className="w-full flex gap-2 flex-wrap">
-      <Card className="w-full">
-        <CardHeader className="flex justify-between !items-start gap-5 px-5 sticky flex-1 flex-wrap">
-          <div className="flex gap-2 items-center">
-            <User
-              className="flex justify-start"
-              avatarProps={{
-                radius: "full",
-                size: "lg",
-                src: coin?.image ?? "",
-              }}
-              classNames={{
-                description: "text-default-500",
-              }}
-              description={""}
-              name={""}
-            ></User>
-            <div className="text-xl font-bold ">{coin?.name}</div>
-            <div>{coin?.symbol?.toUpperCase()}</div>
-          </div>
-          <div>
-            <div className="flex justify-between">
-              <span>Market Cap : </span>
-              <span>
-                <b>${coin?.market_cap?.toLocaleString()}</b>
-              </span>
+    <Suspense>
+      <div className="w-full flex gap-2 flex-wrap">
+        <Card className="w-full">
+          <CardHeader className="flex justify-between !items-start gap-5 px-5 sticky flex-1 flex-wrap">
+            <div className="flex gap-2 items-center">
+              <User
+                className="flex justify-start"
+                avatarProps={{
+                  radius: "full",
+                  size: "lg",
+                  src: coin?.image ?? "",
+                }}
+                classNames={{
+                  description: "text-default-500",
+                }}
+                description={""}
+                name={""}
+              ></User>
+              <div className="text-xl font-bold ">{coin?.name}</div>
+              <div>{coin?.symbol?.toUpperCase()}</div>
             </div>
-            <div className="flex justify-between">
-              <span>24H High Price : </span>
-              <span>
-                <b>${coin?.high_24h?.toLocaleString()}</b>
-              </span>
+            <div>
+              <div className="flex justify-between">
+                <span>Market Cap : </span>
+                <span>
+                  <b>${coin?.market_cap?.toLocaleString()}</b>
+                </span>
+              </div>
+              <div className="flex justify-between">
+                <span>24H High Price : </span>
+                <span>
+                  <b>${coin?.high_24h?.toLocaleString()}</b>
+                </span>
+              </div>
+              <div className="flex justify-between">
+                <span>24H Low Price : </span>
+                <span>
+                  <b>${coin?.low_24h?.toLocaleString()}</b>
+                </span>
+              </div>
             </div>
-            <div className="flex justify-between">
-              <span>24H Low Price : </span>
-              <span>
-                <b>${coin?.low_24h?.toLocaleString()}</b>
-              </span>
+            <div className="flex flex-col items-center">
+              <div className="text-4xl font-semibold">
+                ${coin?.current_price?.toLocaleString()}
+              </div>
+              {get24HChange()}
             </div>
-          </div>
-          <div className="flex flex-col items-center">
-            <div className="text-4xl font-semibold">
-              ${coin?.current_price?.toLocaleString()}
-            </div>
-            {get24HChange()}
-          </div>
-        </CardHeader>
-      </Card>
-      <Card className="flex-1">
-        <HistoricalChart coinId={coin?.id || ""} />
-      </Card>
-    </div>
+          </CardHeader>
+        </Card>
+        <Card className="flex-1">
+          <HistoricalChart coinId={coin?.id || ""} />
+        </Card>
+      </div>
+    </Suspense>
   );
 };
 
