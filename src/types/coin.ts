@@ -1,0 +1,28 @@
+export type Coin = {
+  id: null | string;
+  symbol: null | string;
+  name: null | string;
+  image: null | string;
+  current_price: null | number;
+  market_cap: null | number;
+  market_cap_rank: null | number;
+  fully_diluted_valuation: null | number;
+  total_volume: null | number;
+  high_24h: null | number;
+  low_24h: null | number;
+  price_change_24h: null | number;
+  price_change_percentage_24h: null | number;
+  market_cap_change_24h: null | number;
+  market_cap_change_percentage_24h: null | number;
+  circulating_supply: null | number;
+  total_supply: null | number;
+  max_supply: null | number;
+  ath: null | number;
+  ath_change_percentage: null | number;
+  ath_date: null | string;
+  atl: null | number;
+  atl_change_percentage: null | number;
+  atl_date: null | string;
+  roi: null | null | any;
+  last_updated: null | string;
+};
