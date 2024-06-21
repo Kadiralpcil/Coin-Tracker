@@ -1,28 +1,36 @@
-export type Coin = {
-  id: null | string;
-  symbol: null | string;
-  name: null | string;
-  image: null | string;
-  current_price: null | number;
-  market_cap: null | number;
-  market_cap_rank: null | number;
-  fully_diluted_valuation: null | number;
-  total_volume: null | number;
-  high_24h: null | number;
-  low_24h: null | number;
-  price_change_24h: null | number;
-  price_change_percentage_24h: null | number;
-  market_cap_change_24h: null | number;
-  market_cap_change_percentage_24h: null | number;
-  circulating_supply: null | number;
-  total_supply: null | number;
-  max_supply: null | number;
-  ath: null | number;
-  ath_change_percentage: null | number;
-  ath_date: null | string;
-  atl: null | number;
-  atl_change_percentage: null | number;
-  atl_date: null | string;
-  roi: null | null | any;
-  last_updated: null | string;
+type ROI = {
+  times: number;
+  currency: string;
+  percentage: number;
 };
+
+type Coin = {
+  id: string;
+  symbol: string;
+  name: string;
+  image: string;
+  current_price: number;
+  market_cap: number;
+  market_cap_rank: number;
+  fully_diluted_valuation: number | null;
+  total_volume: number;
+  high_24h: number;
+  low_24h: number;
+  price_change_24h: number;
+  price_change_percentage_24h: number;
+  market_cap_change_24h: number;
+  market_cap_change_percentage_24h: number;
+  circulating_supply: number;
+  total_supply: number;
+  max_supply: number | null;
+  ath: number;
+  ath_change_percentage: number;
+  ath_date: string;
+  atl: number;
+  atl_change_percentage: number;
+  atl_date: string;
+  roi: ROI | null;
+  last_updated: string;
+};
+
+export type { Coin };

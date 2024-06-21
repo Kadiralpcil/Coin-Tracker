@@ -1,3 +1,5 @@
+import { Coin } from "@/types/coin";
+
 const options = {
   method: "GET",
   headers: {
@@ -20,7 +22,7 @@ const getCoinList = async (coinId?: string) => {
       throw new Error("Network response was not ok");
     }
     const data = await response.json();
-    return data;
+    return data as Coin[];
   } catch (error) {
     console.error("Error fetching coin list:", error);
     throw error;
