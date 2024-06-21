@@ -82,9 +82,9 @@ const CoinList = ({ listFavoriteItems = false }: CoinListProps) => {
             classNames={{
               description: "text-default-500",
             }}
-            description={cellValue}
+            description={(cellValue as string) ?? ""}
             name={coin.symbol?.toUpperCase()}
-          ></User>
+          />
         );
       case "price_change_percentage_24h":
         const lessThenZero = Number(Number(cellValue).toFixed(2)) < 0;
@@ -119,7 +119,7 @@ const CoinList = ({ listFavoriteItems = false }: CoinListProps) => {
         return (
           <span className="text-medium font-normal flex leading-loose">
             <p className="font-bold">$</p>
-            <p>{cellValue.toLocaleString()}</p>
+            <p>{(cellValue as number)?.toLocaleString()}</p>
           </span>
         );
       case "actions":
@@ -160,7 +160,9 @@ const CoinList = ({ listFavoriteItems = false }: CoinListProps) => {
           </div>
         );
       default:
-        return cellValue;
+        return cellValue !== null && cellValue !== undefined
+          ? cellValue.toString()
+          : null;
     }
   }, []);
 

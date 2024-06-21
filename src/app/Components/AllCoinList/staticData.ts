@@ -2155,7 +2155,7 @@ const staticData: Coin[] = [
     market_cap_change_24h: 20840690,
     market_cap_change_percentage_24h: 1.44699,
     circulating_supply: 2060459205.6112,
-    total_supply: null,
+    total_supply: 0,
     max_supply: null,
     ath: 22.71,
     ath_change_percentage: -96.87541,
