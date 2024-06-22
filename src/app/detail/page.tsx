@@ -64,7 +64,7 @@ const Detail = () => {
 
   return (
     <div className="w-full flex gap-2 flex-wrap">
-      <Suspense>
+      <Suspense fallback={<div>loading..</div>}>
         <Card className="w-full">
           <CardHeader className="flex justify-between !items-start gap-5 px-5 sticky flex-1 flex-wrap">
             <div className="flex gap-2 items-center">
