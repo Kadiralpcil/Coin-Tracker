@@ -7,11 +7,16 @@ import { Suspense, useCallback, useEffect, useState } from "react";
 import { FaCaretDown, FaCaretUp } from "react-icons/fa";
 import HistoricalChart from "./HistoricalChart";
 
+import { usePathname } from "next/navigation";
+
 const Detail = () => {
   //States
   const [coin, setCoin] = useState<Coin | undefined>(undefined);
   const [loading, setLoading] = useState(false);
   const searchParams = useSearchParams();
+  const pathname = usePathname();
+
+  console.log("pathname", pathname);
   //Querys
   useEffect(() => {
     if (!searchParams.get("coin")) {
@@ -107,10 +112,10 @@ const Detail = () => {
             </div>
           </CardHeader>
         </Card>
+        <Card className="flex-1">
+          <HistoricalChart coinId={coin?.id || ""} />
+        </Card>
       </Suspense>
-      <Card className="flex-1">
-        <HistoricalChart coinId={coin?.id || ""} />
-      </Card>
     </div>
   );
 };

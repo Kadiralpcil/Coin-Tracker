@@ -143,9 +143,6 @@ const CoinList = ({
           const isFavorite = favorites.some(
             (favoriteCoin) => favoriteCoin.id === coin.id
           );
-          console.log("fav", favorites);
-          console.log("coin ", coin);
-          console.log("isFavorite", isFavorite);
 
           return (
             <div>
