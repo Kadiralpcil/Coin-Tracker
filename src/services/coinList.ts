@@ -9,7 +9,7 @@ const options = {
 };
 const getApiUrl = (id?: string) => {
   if (id) {
-    return `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${id}`;
+    return `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${id.toLocaleLowerCase()}`;
   } else {
     return "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd";
   }

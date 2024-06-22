@@ -32,7 +32,6 @@ const OhlcChart = ({ coinId }: OhlcChartProps) => {
   const lastData = data[data.length - 1];
   const labels = ["Open", "High", "Low", "Close"];
   const prices = [lastData[1], lastData[2], lastData[3], lastData[4]];
-  console.log(prices);
   const chartData = {
     labels,
     datasets: [

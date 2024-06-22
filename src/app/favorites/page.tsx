@@ -1,9 +1,13 @@
-import CoinList from "../Components/AllCoinList";
+"use client";
+import CoinList from "../../Components/AllCoinList";
 
 const Favorites = () => {
   return (
     <div>
-      <CoinList listFavoriteItems={true} />
+      <CoinList
+        listFavoriteItems={true}
+        favoriteListChangingTrigger={() => console.log("dasda")}
+      />
     </div>
   );
 };

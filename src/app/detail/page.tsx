@@ -58,8 +58,8 @@ const Detail = () => {
   };
 
   return (
-    <Suspense>
-      <div className="w-full flex gap-2 flex-wrap">
+    <div className="w-full flex gap-2 flex-wrap">
+      <Suspense>
         <Card className="w-full">
           <CardHeader className="flex justify-between !items-start gap-5 px-5 sticky flex-1 flex-wrap">
             <div className="flex gap-2 items-center">
@@ -107,11 +107,11 @@ const Detail = () => {
             </div>
           </CardHeader>
         </Card>
-        <Card className="flex-1">
-          <HistoricalChart coinId={coin?.id || ""} />
-        </Card>
-      </div>
-    </Suspense>
+      </Suspense>
+      <Card className="flex-1">
+        <HistoricalChart coinId={coin?.id || ""} />
+      </Card>
+    </div>
   );
 };
 

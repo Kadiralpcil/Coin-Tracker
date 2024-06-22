@@ -4,7 +4,6 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 //Services
 import getCoins from "@/services/coinList";
-import { getFavorites, toggleFavoriteItem } from "@/services/localStorage";
 
 //Types
 import { Coin } from "@/types/coin";
@@ -25,23 +24,30 @@ import {
   Button,
   Chip,
 } from "@nextui-org/react";
-// import { Loading } from "@nextui-org/react";
 //Components
 import { columns } from "./columns";
 import staticData from "./staticData";
 
 //Icons
-import { FaBitcoin, FaStar } from "react-icons/fa";
+import { FaBitcoin, FaLessThanEqual, FaStar } from "react-icons/fa";
 import { FaSearch } from "react-icons/fa";
 import Header from "../PageHeader/Header";
-import FavoriteList from "../FavoriteList";
+import { useLocalStorage } from "@/Hooks/useLocalStorage";
 import Link from "next/link";
+
 interface CoinListProps {
   listFavoriteItems?: boolean;
+  favoriteListChangingTrigger: () => void;
 }
-const CoinList = ({ listFavoriteItems = false }: CoinListProps) => {
+const CoinList = ({
+  listFavoriteItems = false,
+  favoriteListChangingTrigger,
+}: CoinListProps) => {
+  //Hooks
+  const { toggleItem, getFavorites } = useLocalStorage("favorites");
   //States
   const [coins, setCoins] = useState<Coin[]>([]);
+  const [favorites, setFavorites] = useState<Coin[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [filterValue, setFilterValue] = useState("");
@@ -49,7 +55,16 @@ const CoinList = ({ listFavoriteItems = false }: CoinListProps) => {
   //Constants
   const pages = Math.ceil(coins.length / 10);
   const hasSearchFilter = Boolean(filterValue);
-
+  //Handlers
+  const handleClickFavoriteButtonClick = (value: Coin) => {
+    if (favorites.find((item) => item.id === value.id)) {
+      setFavorites(favorites.filter((item) => item.id !== value.id));
+    } else {
+      setFavorites((favorites) => [...favorites, value]);
+    }
+    toggleItem(value);
+    favoriteListChangingTrigger();
+  };
   //CallBacks
   const requetsCoins = useCallback(() => {
     setLoading(true);
@@ -67,104 +82,107 @@ const CoinList = ({ listFavoriteItems = false }: CoinListProps) => {
     fetchCoins();
   }, [coins]);
 
-  const renderCell = useCallback((coin: Coin, columnKey: React.Key) => {
-    const cellValue = coin[columnKey as keyof Coin];
+  const renderCell = useCallback(
+    (coin: Coin, columnKey: React.Key) => {
+      const cellValue = coin[columnKey as keyof Coin];
 
-    switch (columnKey) {
-      case "name":
-        return (
-          <User
-            avatarProps={{
-              radius: "full",
-              size: "sm",
-              src: coin.image ?? "",
-            }}
-            classNames={{
-              description: "text-default-500",
-            }}
-            description={(cellValue as string) ?? ""}
-            name={coin.symbol?.toUpperCase()}
-          />
-        );
-      case "price_change_percentage_24h":
-        const lessThenZero = Number(Number(cellValue).toFixed(2)) < 0;
-        const higherThenZero = Number(Number(cellValue).toFixed(2)) > 0;
-        return (
-          <Chip
-            color={
-              lessThenZero ? "danger" : higherThenZero ? "success" : "default"
-            }
-          >
-            {Number(cellValue).toFixed(2)} %
-          </Chip>
-        );
-      case "market_cap_change_percentage_24h":
-        const lessThenZeroMarketCap = Number(Number(cellValue).toFixed(2)) < 0;
-        const higherThenZeroMarketCap =
-          Number(Number(cellValue).toFixed(2)) > 0;
-        return (
-          <Chip
-            color={
-              lessThenZeroMarketCap
-                ? "danger"
-                : higherThenZeroMarketCap
-                ? "success"
-                : "default"
-            }
-          >
-            {Number(cellValue).toFixed(2)} %
-          </Chip>
-        );
-      case "current_price":
-        return (
-          <span className="text-medium font-normal flex leading-loose">
-            <p className="font-bold">$</p>
-            <p>{(cellValue as number)?.toLocaleString()}</p>
-          </span>
-        );
-      case "actions":
-        const isFavorite = getFavorites().some(
-          (favoriteCoin) => favoriteCoin.id === coin.id
-        );
-
-        return (
-          <div>
-            <Button
-              variant="light"
-              onClick={() => {
-                toggleFavoriteItem(coin);
-                if (listFavoriteItems) {
-                  if (isFavorite) {
-                    setCoins((coins) =>
-                      coins.filter((item) => item.id !== coin.id)
-                    );
-                  } else {
-                    setCoins((coins) => [...coins, coin]);
-                  }
-                } else {
-                  requetsCoins();
-                }
+      switch (columnKey) {
+        case "name":
+          return (
+            <User
+              avatarProps={{
+                radius: "full",
+                size: "sm",
+                src: coin.image ?? "",
               }}
-              isIconOnly
-              color="default"
-              size="sm"
-              className="transition-transform duration-200 ease-in-out hover:scale-110"
+              classNames={{
+                description: "text-default-500",
+              }}
+              description={(cellValue as string) ?? ""}
+              name={coin.symbol?.toUpperCase()}
+            />
+          );
+        case "price_change_percentage_24h":
+          const lessThenZero = Number(Number(cellValue).toFixed(2)) < 0;
+          const higherThenZero = Number(Number(cellValue).toFixed(2)) > 0;
+          return (
+            <Chip
+              color={
+                lessThenZero ? "danger" : higherThenZero ? "success" : "default"
+              }
             >
-              <FaStar
-                cursor="pointer"
-                className={`text-xl transition-colors duration-200 ease-in-out ${
-                  isFavorite ? "text-yellow-300" : "text-gray-300"
-                }`}
-              />
-            </Button>
-          </div>
-        );
-      default:
-        return cellValue !== null && cellValue !== undefined
-          ? cellValue.toString()
-          : null;
-    }
-  }, []);
+              {Number(cellValue).toFixed(2)} %
+            </Chip>
+          );
+        case "market_cap_change_percentage_24h":
+          const lessThenZeroMarketCap =
+            Number(Number(cellValue).toFixed(2)) < 0;
+          const higherThenZeroMarketCap =
+            Number(Number(cellValue).toFixed(2)) > 0;
+          return (
+            <Chip
+              color={
+                lessThenZeroMarketCap
+                  ? "danger"
+                  : higherThenZeroMarketCap
+                  ? "success"
+                  : "default"
+              }
+            >
+              {Number(cellValue).toFixed(2)} %
+            </Chip>
+          );
+        case "current_price":
+          return (
+            <div className="text-medium font-normal flex leading-loose">
+              <div className="font-bold">$</div>
+              <div>{(cellValue as number)?.toLocaleString()}</div>
+            </div>
+          );
+        case "actions":
+          const isFavorite = favorites.some(
+            (favoriteCoin) => favoriteCoin.id === coin.id
+          );
+          console.log("fav", favorites);
+          console.log("coin ", coin);
+          console.log("isFavorite", isFavorite);
+
+          return (
+            <div>
+              <Button
+                disabled={listFavoriteItems}
+                variant="light"
+                onClick={() => handleClickFavoriteButtonClick(coin)}
+                isIconOnly
+                color="default"
+                size="sm"
+                className="transition-transform duration-200 ease-in-out hover:scale-110"
+              >
+                <FaStar
+                  cursor="pointer"
+                  className={`text-xl transition-colors duration-200 ease-in-out ${
+                    isFavorite ? "text-yellow-300" : "text-gray-300"
+                  }`}
+                />
+              </Button>
+            </div>
+          );
+        case "detail":
+          return (
+            <Link href={`/detail?coin=${coin.name}`}>
+              <Button variant="flat" size="sm">
+                Detail
+              </Button>
+            </Link>
+          );
+        default:
+          return cellValue !== null && cellValue !== undefined
+            ? cellValue.toString()
+            : null;
+      }
+    },
+    [favorites]
+  );
 
   const onSearchChange = useCallback((value?: string) => {
     if (value) {
@@ -242,15 +260,19 @@ const CoinList = ({ listFavoriteItems = false }: CoinListProps) => {
   }, [items.length, page, pages, hasSearchFilter]);
 
   //Effects;
+  useEffect(() => {
+    setFavorites(getFavorites() || []);
+  }, []);
 
   useEffect(() => {
     if (listFavoriteItems) {
-      setCoins(getFavorites());
+      setCoins(favorites);
+      setLoading(false);
       return;
     } else {
       requetsCoins();
     }
-  }, [listFavoriteItems]);
+  }, [listFavoriteItems, favorites]);
 
   return (
     <>
@@ -285,13 +307,13 @@ const CoinList = ({ listFavoriteItems = false }: CoinListProps) => {
                 </TableHeader>
                 <TableBody emptyContent={"There is no data"} items={items}>
                   {(item) => (
-                    <Link key={item.id} href={`/detail?coin=${item.name}`}>
-                      <TableRow key={item.id}>
-                        {(columnKey) => (
-                          <TableCell>{renderCell(item, columnKey)}</TableCell>
-                        )}
-                      </TableRow>
-                    </Link>
+                    <TableRow key={item.id}>
+                      {(columnKey) => (
+                        <TableCell key={columnKey}>
+                          {renderCell(item, columnKey)}
+                        </TableCell>
+                      )}
+                    </TableRow>
                   )}
                 </TableBody>
               </Table>

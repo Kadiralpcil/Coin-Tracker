@@ -1,11 +1,7 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
-const inter = Inter({ subsets: ["latin"] });
-import { IoMdHome } from "react-icons/io";
-import BackButton from "./Components/BackButton";
-import TopBar from "./Components/TopBar";
+import TopBar from "../Components/TopBar";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -21,8 +17,10 @@ export default function RootLayout({
     <html lang="en" className="bg-[#DDE4E650]">
       <body>
         <Providers>
-          <TopBar />
-          <div className="p-5">{children}</div>
+          <div>
+            <TopBar />
+            <div className="p-5">{children}</div>
+          </div>
         </Providers>
       </body>
     </html>

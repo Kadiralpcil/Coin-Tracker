@@ -1,23 +1,33 @@
 "use client";
-
-import { getFavorites } from "@/services/localStorage";
+//Components
 import FavoriteCoin from "./FavoriteCoin";
+import Header from "../PageHeader/Header";
+//UI KIT
+import { Button } from "@nextui-org/react";
+//Next
+import Link from "next/link";
+//ICONS
+import { FaStar } from "react-icons/fa";
+import { useLocalStorage } from "@/Hooks/useLocalStorage";
 import { useEffect, useState } from "react";
 import { Coin } from "@/types/coin";
-import { Button, Card, CardHeader } from "@nextui-org/react";
-import Header from "../PageHeader/Header";
-import { FaStar } from "react-icons/fa";
-import Link from "next/link";
 
-const FavoriteList = () => {
+interface FavoriteListProps {
+  trigger: boolean;
+}
+const FavoriteList = ({ trigger }: FavoriteListProps) => {
+  //Hooks
+  const { getFavorites } = useLocalStorage("favorites");
+
   //States
-  const [favorites, setFavorites] = useState<Coin[]>([]);
+  const [favorites, setFavorites] = useState<Coin[]>();
+
   //Effects
   useEffect(() => {
-    setFavorites(getFavorites());
-  }, []);
+    setFavorites(getFavorites() || []);
+  }, [trigger]);
   return (
-    <div>
+    <>
       <Header
         path="/favorites"
         name={"Favorite List"}
@@ -34,13 +44,11 @@ const FavoriteList = () => {
         </Link>
       </div>
       <div className="grid grid-cols-1 gap-2 p-2 md:grid-cols-2 md:p-4 lg:grid-cols-3 lg:p-5 cursor-pointer">
-        {getFavorites()
-          .slice(0, 3)
-          .map((coin) => (
-            <FavoriteCoin coin={coin} />
-          ))}
+        {favorites?.slice(0, 3).map((coin) => (
+          <FavoriteCoin coin={coin} />
+        ))}
       </div>
-    </div>
+    </>
   );
 };
 
