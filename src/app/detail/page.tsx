@@ -6,17 +6,18 @@ import { useSearchParams } from "next/navigation";
 import { Suspense, useCallback, useEffect, useState } from "react";
 import { FaCaretDown, FaCaretUp } from "react-icons/fa";
 import HistoricalChart from "./HistoricalChart";
-
 import { usePathname } from "next/navigation";
 
 const Detail = () => {
   //States
   const [coin, setCoin] = useState<Coin | undefined>(undefined);
   const [loading, setLoading] = useState(false);
+
   const searchParams = useSearchParams();
   const pathname = usePathname();
 
   console.log("pathname", pathname);
+
   //Querys
   useEffect(() => {
     if (!searchParams.get("coin")) {
@@ -27,7 +28,7 @@ const Detail = () => {
   }, [searchParams]);
 
   const getCoinDetail = useCallback((coinId: string) => {
-    const fethCoin = async () => {
+    const fetchCoin = async () => {
       try {
         const Coin = await getCoinList(coinId);
         setCoin(Coin[0]);
@@ -37,26 +38,26 @@ const Detail = () => {
         setLoading(false);
       }
     };
-    fethCoin();
+    fetchCoin();
   }, []);
 
   const get24HChange = () => {
-    const lessThenZero =
+    const lessThanZero =
       Number(Number(coin?.price_change_percentage_24h).toFixed(2)) < 0;
-    const higherThenZero =
+    const higherThanZero =
       Number(Number(coin?.price_change_percentage_24h).toFixed(2)) > 0;
     return (
       <span
         className={
-          lessThenZero
-            ? " text-red-700 flex gap-1 items-center"
-            : higherThenZero
-            ? " text-green-400 flex gap-1 items-center"
-            : " text-gray-500 flex gap-1 items-center"
+          lessThanZero
+            ? "text-red-700 flex gap-1 items-center"
+            : higherThanZero
+            ? "text-green-400 flex gap-1 items-center"
+            : "text-gray-500 flex gap-1 items-center"
         }
       >
-        {lessThenZero && <FaCaretDown />}
-        {higherThenZero && <FaCaretUp />}
+        {lessThanZero && <FaCaretDown />}
+        {higherThanZero && <FaCaretUp />}
         {Number(Number(coin?.price_change_percentage_24h).toFixed(2))}% (24H)
       </span>
     );
@@ -64,60 +65,68 @@ const Detail = () => {
 
   return (
     <div className="w-full flex gap-2 flex-wrap">
-      <Suspense fallback={<div>loading..</div>}>
-        <Card className="w-full">
-          <CardHeader className="flex justify-between !items-start gap-5 px-5 sticky flex-1 flex-wrap">
-            <div className="flex gap-2 items-center">
-              <User
-                className="flex justify-start"
-                avatarProps={{
-                  radius: "full",
-                  size: "lg",
-                  src: coin?.image ?? "",
-                }}
-                classNames={{
-                  description: "text-default-500",
-                }}
-                description={""}
-                name={""}
-              ></User>
-              <div className="text-xl font-bold ">{coin?.name}</div>
-              <div>{coin?.symbol?.toUpperCase()}</div>
+      {/* <Suspense fallback={<div>loading..</div>}> */}
+      <Card className="w-full">
+        <CardHeader className="flex justify-between !items-start gap-5 px-5 sticky flex-1 flex-wrap">
+          <div className="flex gap-2 items-center">
+            <User
+              className="flex justify-start"
+              avatarProps={{
+                radius: "full",
+                size: "lg",
+                src: coin?.image ?? "",
+              }}
+              classNames={{
+                description: "text-default-500",
+              }}
+              description={""}
+              name={""}
+            ></User>
+            <div className="text-xl font-bold ">{coin?.name}</div>
+            <div>{coin?.symbol?.toUpperCase()}</div>
+          </div>
+          <div>
+            <div className="flex justify-between">
+              <span>Market Cap : </span>
+              <span>
+                <b>${coin?.market_cap?.toLocaleString()}</b>
+              </span>
             </div>
-            <div>
-              <div className="flex justify-between">
-                <span>Market Cap : </span>
-                <span>
-                  <b>${coin?.market_cap?.toLocaleString()}</b>
-                </span>
-              </div>
-              <div className="flex justify-between">
-                <span>24H High Price : </span>
-                <span>
-                  <b>${coin?.high_24h?.toLocaleString()}</b>
-                </span>
-              </div>
-              <div className="flex justify-between">
-                <span>24H Low Price : </span>
-                <span>
-                  <b>${coin?.low_24h?.toLocaleString()}</b>
-                </span>
-              </div>
+            <div className="flex justify-between">
+              <span>24H High Price : </span>
+              <span>
+                <b>${coin?.high_24h?.toLocaleString()}</b>
+              </span>
             </div>
-            <div className="flex flex-col items-center">
-              <div className="text-4xl font-semibold">
-                ${coin?.current_price?.toLocaleString()}
-              </div>
-              {get24HChange()}
+            <div className="flex justify-between">
+              <span>24H Low Price : </span>
+              <span>
+                <b>${coin?.low_24h?.toLocaleString()}</b>
+              </span>
             </div>
-          </CardHeader>
-        </Card>
-        <Card className="flex-1">
-          <HistoricalChart coinId={coin?.id || ""} />
-        </Card>
-      </Suspense>
+          </div>
+          <div className="flex flex-col items-center">
+            <div className="text-4xl font-semibold">
+              ${coin?.current_price?.toLocaleString()}
+            </div>
+            {get24HChange()}
+          </div>
+        </CardHeader>
+      </Card>
+      <Card className="flex-1">
+        <HistoricalChart coinId={coin?.id || ""} />
+      </Card>
+      {/* </Suspense> */}
     </div>
   );
 };
 
-export default Detail;
+const DetailWithSuspense = () => {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <Detail />
+    </Suspense>
+  );
+};
+
+export default DetailWithSuspense;
