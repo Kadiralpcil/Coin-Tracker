@@ -1,5 +1,5 @@
 "use client";
-import CoinList from "../../Components/AllCoinList";
+import CoinList from "../Components/AllCoinList";
 
 const Favorites = () => {
   return (
