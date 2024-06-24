@@ -1,14 +1,6 @@
 import { Coin } from "@/types/coin";
-import {
-  Avatar,
-  Button,
-  Card,
-  CardBody,
-  CardFooter,
-  CardHeader,
-  Image,
-  Link,
-} from "@nextui-org/react";
+import { Avatar, Card, CardBody, Link } from "@nextui-org/react";
+
 import OhlcChart from "./OhlcChart";
 interface FavoriteCoinProps {
   coin: Coin;

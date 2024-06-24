@@ -87,21 +87,29 @@ const HistoricalChart = ({ coinId }: HistoricalChartProps) => {
     <div className="p-2">
       {!loading ? (
         <div>
-          <div className="flex justify-center p-2 gap-2">
-            {CahrtTimeRange.map((time) => (
-              <Chip
-                onClick={() => setSelectedTime(time)}
-                className="cursor-pointer hover:scale-105 ease-out"
-                variant="bordered"
-                color={
-                  time.label === selectedTime.label ? "primary" : "default"
-                }
-              >
-                {time.label}
-              </Chip>
-            ))}
-          </div>
-          <Line data={data} options={options} />
+          {chartValues ? (
+            <>
+              <div className="flex justify-center p-2 gap-2">
+                {CahrtTimeRange.map((time) => (
+                  <Chip
+                    onClick={() => setSelectedTime(time)}
+                    className="cursor-pointer hover:scale-105 ease-out"
+                    variant="bordered"
+                    color={
+                      time.label === selectedTime.label ? "primary" : "default"
+                    }
+                  >
+                    {time.label}
+                  </Chip>
+                ))}
+              </div>
+              <Line data={data} options={options} />
+            </>
+          ) : (
+            <div className="flex justify-center text-2xl p-5">
+              There is no data
+            </div>
+          )}
         </div>
       ) : (
         <div>Loading...</div>

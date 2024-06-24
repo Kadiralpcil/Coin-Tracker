@@ -11,7 +11,13 @@ const TopBar = () => {
       <Link href="/" key="Home">
         <IoHome color="white" className="cursor-pointer" />
       </Link>
-      <FaGithub cursor="pointer" color="white" size={22} />
+      <Link
+        href="https://github.com/Kadiralpcil/Coin-Tracker"
+        key="github"
+        target="blank"
+      >
+        <FaGithub cursor="pointer" color="white" size={22} />
+      </Link>
     </div>
   );
 };
