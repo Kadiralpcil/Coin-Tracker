@@ -10,7 +10,7 @@ export default function Home() {
     setTrigger(!trigger);
   };
   return (
-    <main className="p-3">
+    <main className="">
       <FavoriteList trigger={trigger} />
       <CoinList favoriteListChangingTrigger={favoriteListChangingTrigger} />
     </main>

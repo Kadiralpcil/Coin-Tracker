@@ -45,7 +45,7 @@ const FavoriteList = ({ trigger }: FavoriteListProps) => {
             </Button>
           </Link>
         </div>
-        <div className="grid grid-cols-1 gap-2 p-2 md:grid-cols-2 md:p-4 lg:grid-cols-3 lg:p-5 cursor-pointer">
+        <div className="grid grid-cols-1 md:grid-cols-2 md:p-4 lg:grid-cols-3 lg:p-5 cursor-pointer">
           {favorites?.slice(0, 3).map((coin) => (
             <FavoriteCoin coin={coin} />
           ))}

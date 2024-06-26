@@ -239,7 +239,7 @@ const CoinList = ({
 
   const bottomContent = useMemo(() => {
     return (
-      <div className="py-2 px-2 flex justify-between items-center">
+      <div className=" flex justify-between items-center">
         <Pagination
           showControls
           classNames={{
@@ -278,7 +278,7 @@ const CoinList = ({
         name={listFavoriteItems ? "Favorite List" : "Coin List"}
         icon={listFavoriteItems ? <FaStar color="yellow" /> : <FaBitcoin />}
       />
-      <div className="p-5">
+      <div className="p-0 sm:p-1 md:p-2 lg:p-5">
         {loading ? (
           <div>loading..</div>
         ) : (

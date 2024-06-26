@@ -17,10 +17,8 @@ export default function RootLayout({
     <html lang="en" className="bg-[#DDE4E650]">
       <body>
         <Providers>
-          <div>
-            <TopBar />
-            <div className="p-5">{children}</div>
-          </div>
+          <TopBar />
+          <div className="p-1 sm:p-1 md:p-3 lg:p-5">{children}</div>
         </Providers>
       </body>
     </html>
